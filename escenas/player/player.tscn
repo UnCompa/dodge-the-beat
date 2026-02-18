@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://cx3n2f5llbyy8"]
+
+[ext_resource type="Script" uid="uid://hejixtg732it" path="res://escenas/player/character_body_2d.gd" id="1_txhqx"]
+
+[node name="Player" type="Node2D" unique_id=1616885226]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=286564188]
+script = ExtResource("1_txhqx")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CharacterBody2D" unique_id=1198842287]
+position = Vector2(5.9999995, 9)
+scale = Vector2(1.0265789, 1.1682531)
+polygon = PackedVector2Array(-1, -5, -1, 0, 5, 0, 5, -5)
+
+[node name="Polygon2D" type="Polygon2D" parent="CharacterBody2D/CollisionPolygon2D" unique_id=1565766938]
+position = Vector2(-1, -5)
+scale = Vector2(0.85870594, 0.8075173)
+color = Color(0.04000002, 0.60000014, 1, 1)
+polygon = PackedVector2Array(0, 6, 3.4557247, 6, 7, 6, 7, 0, 0, 0)

@@ -19,6 +19,18 @@ extends CharacterBody2D
 @export var min_stretch_vel := 20.0
 @export var player_color := Color(0.2, 0.8, 1.0, 1.0)  # Celeste JSAB
 
+### NUEVO: Sistema de Vidas ###
+@export_group("Vidas")
+@export var max_lives: int = 3
+@export var invulnerability_time: float = 1.5    # Segundos de invulnerabilidad
+@export var blink_speed: float = 10.0            # Velocidad de parpadeo
+
+var current_lives: int
+var is_invulnerable: bool = false
+var invulnerability_timer: float = 0.0
+var blink_timer: float = 0.0
+var is_visible_override: bool = true
+
 var dash_timer: float = 0.0
 var cooldown_timer: float = 0.0
 var is_dashing: bool = false
@@ -36,43 +48,36 @@ var facing_direction: Vector2 = Vector2.RIGHT
 var base_polygon: PackedVector2Array  # Forma base del polígono
 
 func _ready() -> void:
+	current_lives = max_lives  ### NUEVO: Inicializar vidas ###
 	create_player_shape()
 	create_trail_particles()
+	add_to_group('player')
 
 func create_player_shape() -> void:
-	# Creamos la forma base: un cuadrado/círculo suave de 30x30
 	var size := 10.0
 	var half := size / 2.0
 	
-	# Polígono octogonal suave (forma JSAB típica)
 	base_polygon = PackedVector2Array([
-	Vector2(-half, -half),   # Arriba-izq
-	Vector2(half, -half),    # Arriba-der
-	Vector2(half, half),     # Abajo-der
-	Vector2(-half, half),    # Abajo-izq
+		Vector2(-half, -half),
+		Vector2(half, -half),
+		Vector2(half, half),
+		Vector2(-half, half),
 	])
 	
-	# 1. Crear CollisionPolygon2D
 	collision_poly = CollisionPolygon2D.new()
 	collision_poly.name = "CollisionPolygon2D"
 	collision_poly.polygon = base_polygon.duplicate()
 	add_child(collision_poly)
 	
-	# 2. Crear Polygon2D visual como hijo de la colisión
 	visual_poly = Polygon2D.new()
 	visual_poly.name = "VisualPolygon"
 	visual_poly.polygon = base_polygon.duplicate()
 	visual_poly.color = player_color
-	
-	# Efecto de brillo/borde
 	visual_poly.polygons = [PackedInt32Array(range(base_polygon.size()))]
-	
-	# Opcional: añadir un poco de antialiasing visual
 	visual_poly.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	
 	collision_poly.add_child(visual_poly)
 	
-	# Asegurar que esté centrado
 	collision_poly.position = Vector2.ZERO
 	visual_poly.position = Vector2.ZERO
 
@@ -85,17 +90,13 @@ func create_trail_particles() -> void:
 	add_child(trail_particles)
 	
 	var material := ParticleProcessMaterial.new()
-	
-	# Emisión desde el centro del jugador
 	material.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
 	material.emission_sphere_radius = 20.0
-	
 	material.gravity = Vector3.ZERO
 	material.spread = 0.0
 	material.initial_velocity_min = 0.0
 	material.initial_velocity_max = 0.0
 	
-	# Curva de escala
 	var scale_curve := Curve.new()
 	scale_curve.add_point(Vector2(0.0, 0.6))
 	scale_curve.add_point(Vector2(0.3, 1.0))
@@ -104,7 +105,6 @@ func create_trail_particles() -> void:
 	scale_texture.curve = scale_curve
 	material.scale_curve = scale_texture
 	
-	# Color celeste que se desvanece
 	var gradient := Gradient.new()
 	gradient.add_point(0.0, Color(player_color.r, player_color.g, player_color.b, 0.6))
 	gradient.add_point(1.0, Color(player_color.r, player_color.g, player_color.b, 0.0))
@@ -118,27 +118,72 @@ func create_trail_particles() -> void:
 	trail_particles.emitting = true
 
 func _physics_process(delta: float) -> void:
+	### NUEVO: Manejar invulnerabilidad ###
+	if is_invulnerable:
+		update_invulnerability(delta)
+	
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	
-	# Timers
 	if cooldown_timer > 0:
 		cooldown_timer -= delta
 	
-	# Dash input
 	if Input.is_action_just_pressed("ui_accept") and cooldown_timer <= 0:
 		start_dash(input_dir)
 	
-	# Movimiento
 	if is_dashing:
 		process_dash(input_dir, delta)
 	else:
 		process_normal_movement(input_dir, delta)
 	
 	move_and_slide()
-	
-	# Actualizar forma JSAB
 	update_jsab_shape(delta)
 	update_trail()
+
+### NUEVO: Función de invulnerabilidad ###
+func update_invulnerability(delta: float) -> void:
+	invulnerability_timer -= delta
+	blink_timer += delta * blink_speed
+	
+	# Parpadeo: alternar visibilidad
+	if blink_timer >= 1.0:
+		blink_timer = 0.0
+		is_visible_override = !is_visible_override
+		visual_poly.visible = is_visible_override
+	
+	# Terminar invulnerabilidad
+	if invulnerability_timer <= 0:
+		is_invulnerable = false
+		visual_poly.visible = true  # Asegurar que sea visible al terminar
+		collision_poly.disabled = false  # Reactivar colisión
+
+### NUEVO: Función para recibir daño ###
+func take_damage() -> void:
+	if is_invulnerable or current_lives <= 0:
+		return
+	
+	current_lives -= 1
+	print("Vidas restantes: ", current_lives)  # Debug
+	
+	if current_lives <= 0:
+		game_over()
+	else:
+		start_invulnerability()
+
+### NUEVO: Iniciar invulnerabilidad ###
+func start_invulnerability() -> void:
+	is_invulnerable = true
+	invulnerability_timer = invulnerability_time
+	blink_timer = 0.0
+	is_visible_override = true
+
+### NUEVO: Game Over ###
+func game_over() -> void:
+	print("GAME OVER")
+	# Aquí puedes añadir: reiniciar nivel, mostrar menú, etc.
+	# Por ahora solo desactivamos al jugador
+	set_physics_process(false)
+	visual_poly.visible = false
+	trail_particles.emitting = false
 
 func update_jsab_shape(delta: float) -> void:
 	var vel = velocity.length()
@@ -165,22 +210,18 @@ func update_jsab_shape(delta: float) -> void:
 
 func apply_deformation() -> void:
 	if current_stretch < 0.01:
-		# Sin deformación - polígono base
 		visual_poly.rotation = current_rotation
 		collision_poly.rotation = current_rotation
 		visual_poly.scale = Vector2.ONE
 		collision_poly.scale = Vector2.ONE
 		return
 	
-	# Calculamos transformación de estiramiento
 	var stretch_mult = 1.0 + current_stretch
 	var squash_mult = 1.0 - (current_stretch * squash_factor)
 	
-	# Aplicamos rotación
 	visual_poly.rotation = current_rotation
 	collision_poly.rotation = current_rotation
 	
-	# Aplicamos escala no uniforme
 	var deform_scale = Vector2(stretch_mult, squash_mult)
 	visual_poly.scale = deform_scale
 	collision_poly.scale = deform_scale
@@ -196,7 +237,7 @@ func update_trail() -> void:
 	
 	if is_dashing:
 		trail_particles.lifetime = 0.8
-		trail_particles.self_modulate = Color(3.0, 3.0, 5.0, 1.0)  # Brillo intenso
+		trail_particles.self_modulate = Color(3.0, 3.0, 5.0, 1.0)
 	else:
 		trail_particles.lifetime = 0.4
 		trail_particles.self_modulate = Color.WHITE
@@ -212,8 +253,6 @@ func start_dash(input_dir: Vector2) -> void:
 		dash_direction = input_dir.normalized()
 	
 	velocity = dash_direction * dash_speed
-	
-	# Squash de carga
 	current_stretch = -0.15
 
 func process_dash(input_dir: Vector2, delta: float) -> void:
@@ -226,7 +265,7 @@ func process_dash(input_dir: Vector2, delta: float) -> void:
 	
 	if dash_timer <= 0 or velocity.length() < speed:
 		is_dashing = false
-		current_stretch *= 0.3  # Rebote al terminar
+		current_stretch *= 0.3
 
 func process_normal_movement(input_dir: Vector2, delta: float) -> void:
 	if input_dir != Vector2.ZERO:
@@ -234,13 +273,18 @@ func process_normal_movement(input_dir: Vector2, delta: float) -> void:
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, deceleration * delta)
 
-# Llamar esto cuando colisiones con algo
+### NUEVO: Función de colisión modificada ###
 func register_collision_impact(collision_normal: Vector2, impact_force: float) -> void:
-	# Squash en dirección del impacto
-	current_rotation = (-collision_normal).angle()
-	current_stretch = clamp(impact_force / 800.0, 0.0, 0.4)
+	# Solo aplicar efecto visual si no estamos invulnerables
+	if not is_invulnerable:
+		current_rotation = (-collision_normal).angle()
+		current_stretch = clamp(impact_force / 800.0, 0.0, 0.4)
+		
+		visual_poly.self_modulate = Color.WHITE
+		await get_tree().create_timer(0.05).timeout
+		# Solo volver al color normal si no estamos en parpadeo
+		if not is_invulnerable:
+			visual_poly.self_modulate = player_color
 	
-	# Efecto visual de impacto
-	visual_poly.self_modulate = Color.WHITE
-	await get_tree().create_timer(0.05).timeout
-	visual_poly.self_modulate = player_color
+	# Llamar daño
+	take_damage()

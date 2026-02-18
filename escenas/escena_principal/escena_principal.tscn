@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cx3n2f5llbyy8" path="res://escenas/player/player.tscn" id="1_pdctq"]
 [ext_resource type="Script" uid="uid://d3ma2qksq6rpw" path="res://escenas/escena_principal/camera_2d.gd" id="2_snxy5"]
+[ext_resource type="PackedScene" uid="uid://dqxg0m6u758t3" path="res://escenas/spawner/spawner.tscn" id="3_yoxmf"]
 
 [node name="EscenaPrincipal" type="Node2D" unique_id=1234830979]
 
@@ -12,3 +13,10 @@ script = ExtResource("2_snxy5")
 
 [node name="Player" parent="." unique_id=1616885226 instance=ExtResource("1_pdctq")]
 position = Vector2(-22, 26)
+
+[node name="Spawner" parent="." unique_id=679960899 instance=ExtResource("3_yoxmf")]
+position = Vector2(-6, -136)
+spawn_interval = 0.5
+min_interval = 0.3
+max_interval = 1.0
+speed_variation = 1.0

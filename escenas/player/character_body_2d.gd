@@ -48,10 +48,12 @@ var facing_direction: Vector2 = Vector2.RIGHT
 var base_polygon: PackedVector2Array  # Forma base del polígono
 
 func _ready() -> void:
-	current_lives = max_lives  ### NUEVO: Inicializar vidas ###
+	#current_lives = max_lives  ### NUEVO: Inicializar vidas ###
 	create_player_shape()
 	create_trail_particles()
 	add_to_group('player')
+	
+	#GameManager.lives_changed.connect(_on_lives_changed)
 
 func create_player_shape() -> void:
 	var size := 10.0
@@ -158,13 +160,13 @@ func update_invulnerability(delta: float) -> void:
 
 ### NUEVO: Función para recibir daño ###
 func take_damage() -> void:
-	if is_invulnerable or current_lives <= 0:
+	if is_invulnerable or GameManager.current_lives <= 0:
 		return
 	
-	current_lives -= 1
+	GameManager.current_lives -= 1
 	print("Vidas restantes: ", current_lives)  # Debug
 	
-	if current_lives <= 0:
+	if GameManager.current_lives <= 0:
 		game_over()
 	else:
 		start_invulnerability()

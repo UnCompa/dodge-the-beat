@@ -123,6 +123,8 @@ func _spawn_wave(magnitude: float) -> void:
 	for side in chosen_pattern:
 		for i in range(per_side):
 			_spawn_single(side, bounds, speed_mult, should_accelerate, magnitude)
+			
+	GameManager.add_score(1)
 
 func _spawn_single(side: SpawnSide, bounds: Rect2, speed_mult: float, should_accelerate: bool, magnitude: float) -> void:
 	var obstacle = obstacle_scene.instantiate()

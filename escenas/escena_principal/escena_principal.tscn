@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://d3ma2qksq6rpw" path="res://escenas/escena_principal/camera_2d.gd" id="2_snxy5"]
 [ext_resource type="PackedScene" uid="uid://dqxg0m6u758t3" path="res://escenas/spawner/spawner.tscn" id="3_yoxmf"]
 [ext_resource type="AudioStream" uid="uid://dyqhbjhmopc5m" path="res://music/jakob_welik-we-own-the-night-463855.mp3" id="4_sbgap"]
+[ext_resource type="Script" uid="uid://bnbjtfwo2mx37" path="res://escenas/escena_principal/hud.gd" id="6_y7kll"]
 
 [node name="EscenaPrincipal" type="Node2D" unique_id=1234830979]
 script = ExtResource("1_rrast")
@@ -12,6 +13,22 @@ script = ExtResource("1_rrast")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1639451654]
 limit_smoothed = true
 script = ExtResource("2_snxy5")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D" unique_id=2036423833]
+layer = 4
+script = ExtResource("6_y7kll")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/CanvasLayer" unique_id=1104705120]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="LivesLabel" type="Label" parent="Camera2D/CanvasLayer/HBoxContainer" unique_id=954994106]
+layout_mode = 2
+text = "VIDAS: 0"
+
+[node name="ScoreLabel" type="Label" parent="Camera2D/CanvasLayer/HBoxContainer" unique_id=1679156909]
+layout_mode = 2
+text = "VIDAS: 0"
 
 [node name="Player" parent="." unique_id=1616885226 instance=ExtResource("1_pdctq")]
 position = Vector2(-22, 26)

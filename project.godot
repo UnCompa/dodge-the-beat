@@ -15,9 +15,21 @@ run/main_scene="uid://dnemweto3bcq6"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://di24ffmc33uoy"
+
+[autoload]
+
+GameManager="*uid://c2qqybqqxwvdm"
+
 [display]
 
 window/stretch/mode="canvas_items"
+
+[editor]
+
+version_control/autoload_on_startup=true
 
 [physics]
 

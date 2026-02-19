@@ -1,8 +1,11 @@
 [gd_scene format=3 uid="uid://dqxg0m6u758t3"]
 
 [ext_resource type="Script" uid="uid://dax34uv0xe4c7" path="res://scripts/spawner.gd" id="1_xeu0j"]
-[ext_resource type="PackedScene" uid="uid://bc070g5f5wsun" path="res://escenas/obstaculo/obstaculo.tscn" id="2_u2fdt"]
+[ext_resource type="PackedScene" uid="uid://chldh2uudkk1q" path="res://escenas/obstaculo/proyectil.tscn" id="2_u2fdt"]
 
 [node name="Spawner" type="Node2D" unique_id=679960899]
 script = ExtResource("1_xeu0j")
 obstacle_scene = ExtResource("2_u2fdt")
+margin = 0.0
+speed_variation = 100.0
+difficulty_interval = 10.0

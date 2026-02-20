@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c3p1d2fibx2dg" path="res://escenas/hud/game_over_panel.tscn" id="2_ydodv"]
 [ext_resource type="PackedScene" uid="uid://dqxg0m6u758t3" path="res://escenas/spawner/spawner.tscn" id="3_yoxmf"]
 [ext_resource type="AudioStream" uid="uid://cu2vt8pw2f1fe" path="res://music/moodmode-prime-glitched-logo-165413.mp3" id="5_ugdro"]
+[ext_resource type="PackedScene" uid="uid://bbopwrkjcu251" path="res://escenas/hud/pause_menu.tscn" id="6_ugdro"]
 [ext_resource type="PackedScene" uid="uid://df01le8v3ygpi" path="res://escenas/hud/complete_level_panel.tscn" id="8_ugdro"]
 
 [node name="EscenaPrincipal" type="Node2D" unique_id=1234830979]
@@ -40,6 +41,8 @@ playback_type = 1
 
 [node name="Hud" parent="CanvasLayer" unique_id=1584566176 node_paths=PackedStringArray("music_player") instance=ExtResource("2_w8lef")]
 music_player = NodePath("../../AudioStreamPlayer2D")
+
+[node name="PauseMenu" parent="CanvasLayer" unique_id=622304327 instance=ExtResource("6_ugdro")]
 
 [node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=424721200]
 layer = 2

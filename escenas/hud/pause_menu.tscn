@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://bbopwrkjcu251"]
+
+[ext_resource type="Script" uid="uid://dty6odveetkny" path="res://escenas/hud/pause_menu.gd" id="1_5y6wo"]
+
+[node name="PauseMenu" type="Control" unique_id=622304327]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5y6wo")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1804082967]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6039216)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1260700965]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer" unique_id=379350428]
+layout_mode = 2
+
+[node name="PauseTitle" type="Label" parent="CenterContainer/VBox" unique_id=1631747554]
+layout_mode = 2
+text = "PAUSA"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="CenterContainer/VBox" unique_id=426002688]
+layout_mode = 2
+text = "CONTINUAR"
+
+[node name="RetryButton" type="Button" parent="CenterContainer/VBox" unique_id=265066237]
+layout_mode = 2
+text = "REINTENTAR"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/VBox" unique_id=1505937861]
+layout_mode = 2
+text = "SALIR"

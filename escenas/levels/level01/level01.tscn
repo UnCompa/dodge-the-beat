@@ -4,14 +4,12 @@
 [ext_resource type="Script" uid="uid://7jyri4vl5d3u" path="res://escenas/levels/level01/level01.gd" id="1_rrast"]
 [ext_resource type="Script" uid="uid://d3ma2qksq6rpw" path="res://escenas/levels/level01/camera_2d.gd" id="2_snxy5"]
 [ext_resource type="PackedScene" uid="uid://dpowuciuamb3c" path="res://escenas/hud/hud.tscn" id="2_w8lef"]
+[ext_resource type="PackedScene" uid="uid://c3p1d2fibx2dg" path="res://escenas/hud/game_over_panel.tscn" id="2_ydodv"]
 [ext_resource type="PackedScene" uid="uid://dqxg0m6u758t3" path="res://escenas/spawner/spawner.tscn" id="3_yoxmf"]
 [ext_resource type="AudioStream" uid="uid://y5cbbmrpknia" path="res://music/juniorsoundays-problems-188614.mp3" id="6_px6n3"]
 
 [node name="EscenaPrincipal" type="Node2D" unique_id=1234830979]
 script = ExtResource("1_rrast")
-
-[node name="Hud" parent="." unique_id=1584566176 node_paths=PackedStringArray("music_player") instance=ExtResource("2_w8lef")]
-music_player = NodePath("../AudioStreamPlayer2D")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1639451654]
 limit_smoothed = true
@@ -38,3 +36,13 @@ volume_db = 1.0
 autoplay = true
 bus = &"Musica"
 playback_type = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=720536584]
+
+[node name="Hud" parent="CanvasLayer" unique_id=1584566176 node_paths=PackedStringArray("music_player") instance=ExtResource("2_w8lef")]
+music_player = NodePath("../../AudioStreamPlayer2D")
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=424721200]
+layer = 2
+
+[node name="GameOverPanel" parent="CanvasLayer2" unique_id=317239760 instance=ExtResource("2_ydodv")]

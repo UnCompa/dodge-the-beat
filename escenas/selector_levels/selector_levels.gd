@@ -1,4 +1,4 @@
-extends CanvasLayer
+extends Control
 
 # Array de niveles: cada uno con título y path de la escena
 var levels = [
@@ -17,7 +17,7 @@ func _ready():
 
 func _create_ui():
 	# Obtener o crear el VBoxContainer
-	var center = $CenterContainer
+	var center = $CanvasLayer/CenterContainer
 	if not center:
 		center = CenterContainer.new()
 		center.name = "CenterContainer"

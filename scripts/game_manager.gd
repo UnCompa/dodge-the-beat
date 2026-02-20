@@ -6,8 +6,8 @@ signal score_changed(new_score)
 signal game_over
 signal game_started
 
-@export var max_lives: int = 5
-var current_lives: int = 5:
+@export var max_lives: int = 1
+var current_lives: int = 1:
 	set(value):
 		current_lives = clamp(value, 0, max_lives)
 		lives_changed.emit(current_lives)
@@ -40,6 +40,22 @@ func reset_game() -> void:
 	lives_changed.emit(current_lives)
 	score_changed.emit(score)
 	game_started.emit()
+	
+func back_game() -> void:
+	# 1. Limpiar efectos de audio (Desactivar el filtro de la muerte)
+	# Usamos un bucle para apagar cualquier efecto de filtro que hayamos activado
+	for i in AudioServer.get_bus_effect_count(master_bus_idx):
+		if AudioServer.get_bus_effect(master_bus_idx, i) is AudioEffectLowPassFilter:
+			AudioServer.set_bus_effect_enabled(master_bus_idx, i, false)
+	
+	# 2. Resetear el tiempo del motor
+	Engine.time_scale = 1.0
+	
+	# 3. Resetear valores
+	current_lives = max_lives
+	score = 0
+	lives_changed.emit(current_lives)
+	score_changed.emit(score)
 
 func decrease_lives():
 	if current_lives <= 0: return
@@ -55,18 +71,35 @@ func add_score(amount: int) -> void:
 	score_changed.emit(score)
 
 func _trigger_death_sequence() -> void:
-	# Emitir señal de fin de juego
 	game_over.emit()
 	
-	# Activar Filtro (buscamos el LowPassFilter en el Master)
+	# Reducimos la duración total para que sea más frenético
+	var duration := 0.01
+	
 	for i in AudioServer.get_bus_effect_count(master_bus_idx):
 		var effect = AudioServer.get_bus_effect(master_bus_idx, i)
 		if effect is AudioEffectLowPassFilter:
 			AudioServer.set_bus_effect_enabled(master_bus_idx, i, true)
 			
-			# Animación del filtro y el tiempo
 			var tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-			# Ponemos la música "sorda"
-			tween.tween_property(effect, "cutoff_hz", 400.0, 2.0).from(20000.0)
-			# Ralentizamos el mundo
-			tween.parallel().tween_property(Engine, "time_scale", 0.1, 2.0)
+			
+			# Usamos TRANS_EXPO para que el cambio sea muy rápido al inicio y suave al final
+			# El filtro baja a 400Hz casi instantáneamente
+			tween.tween_property(effect, "cutoff_hz", 400.0, duration)\
+				.from(20000.0)\
+				.set_trans(Tween.TRANS_EXPO)\
+				.set_ease(Tween.EASE_IN_OUT)
+			
+			# El tiempo se ralentiza en sincronía
+			tween.parallel().tween_property(Engine, "time_scale", 0.1, duration)\
+				.set_trans(Tween.TRANS_EXPO)\
+				.set_ease(Tween.EASE_OUT)
+			
+			await tween.finished
+			_show_game_over_ui()
+			break # Salimos del bucle una vez encontrado y aplicado
+			
+func _show_game_over_ui():
+	var go_ui = get_tree().current_scene.find_child("GameOverPanel", true, false)
+	if go_ui:
+		go_ui.show_screen()

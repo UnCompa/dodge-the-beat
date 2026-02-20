@@ -16,10 +16,18 @@ variation_opentype = {
 2003265652: 300
 }
 
-[node name="CanvasLayer" type="CanvasLayer" unique_id=1869315335]
+[node name="Control" type="Control" unique_id=1230847809]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 327.0
+offset_top = 362.0
+offset_right = 527.0
+offset_bottom = 362.0
 script = ExtResource("1_vnhcg")
 
-[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2083799309]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1605933696]
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer" unique_id=1355772267]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -29,22 +37,22 @@ grow_horizontal = 2
 grow_vertical = 2
 use_top_left = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1258452941]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/CenterContainer" unique_id=189163842]
 layout_mode = 2
 theme_override_constants/separation = 32
 alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/VBoxContainer" unique_id=1674682095]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/CenterContainer/VBoxContainer" unique_id=1833141744]
 layout_mode = 2
 theme_override_constants/margin_bottom = 120
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/MarginContainer" unique_id=1817114257]
+[node name="Label" type="Label" parent="CanvasLayer/CenterContainer/VBoxContainer/MarginContainer" unique_id=38867194]
 layout_mode = 2
 text = "Niveles"
 label_settings = SubResource("LabelSettings_jylg6")
 horizontal_alignment = 1
 
-[node name="Play" type="Button" parent="CenterContainer/VBoxContainer" unique_id=857878049]
+[node name="Play" type="Button" parent="CanvasLayer/CenterContainer/VBoxContainer" unique_id=1352571465]
 layout_mode = 2
 theme_override_colors/font_pressed_color = Color(0, 0.73333335, 0.94509804, 1)
 theme_override_colors/font_hover_color = Color(0.72, 0.72, 0.72, 1)
@@ -53,7 +61,7 @@ theme_override_font_sizes/font_size = 32
 text = "Jugar"
 flat = true
 
-[node name="Exit" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1688852627]
+[node name="Exit" type="Button" parent="CanvasLayer/CenterContainer/VBoxContainer" unique_id=1534535863]
 layout_mode = 2
 theme_override_colors/font_pressed_color = Color(0, 0.73333335, 0.94509804, 1)
 theme_override_colors/font_hover_color = Color(0.72, 0.72, 0.72, 1)

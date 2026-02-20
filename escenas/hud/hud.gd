@@ -5,6 +5,7 @@ extends Control
 @onready var score_label = $CanvasLayer/MarginContainer/HBox/LeftVBox/ScoreHB/ScoreLabel
 @onready var progress_bar = $CanvasLayer/MarginContainer/HBox/RightHB/ProgressBar
 @onready var song_icon = $CanvasLayer/MarginContainer/HBox/RightHB/SongIcon
+@onready var time_label = $CanvasLayer/MarginContainer/HBox/RightHB/TimeLabel
 
 @export_group("Configuración Música")
 @export var music_player: AudioStreamPlayer2D
@@ -22,12 +23,22 @@ func _ready() -> void:
 	# Configurar la barra de progreso
 	if music_player and music_player.stream:
 		progress_bar.max_value = music_player.stream.get_length()
+		# Mostrar duración total desde el inicio
+		var total := music_player.stream.get_length()
+		time_label.text = "0:00 / " + _format_time(total)
 
 func _process(_delta: float) -> void:
-	# Actualizar la barra en tiempo real
 	if music_player and music_player.playing:
-		progress_bar.value = music_player.get_playback_position()
+		var current := music_player.get_playback_position()
+		var total := music_player.stream.get_length()
+		progress_bar.value = current
+		time_label.text = _format_time(current) + " / " + _format_time(total)
 
+func _format_time(seconds: float) -> String:
+	var m := int(seconds) / 60
+	var s := int(seconds) % 60
+	return "%d:%02d" % [m, s]
+	
 # --- SEÑALES ---
 
 func _on_lives_changed(lives: int) -> void:

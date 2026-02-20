@@ -122,12 +122,12 @@ func _physics_process(delta: float) -> void:
 	if is_invulnerable:
 		update_invulnerability(delta)
 	
-	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	
 	if cooldown_timer > 0:
 		cooldown_timer -= delta
 	
-	if Input.is_action_just_pressed("ui_accept") and cooldown_timer <= 0:
+	if Input.is_action_just_pressed("dash") and cooldown_timer <= 0:
 		start_dash(input_dir)
 	
 	if is_dashing:

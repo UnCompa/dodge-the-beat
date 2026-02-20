@@ -14,7 +14,7 @@ var levels: Array[Dictionary] = [
 	{
 		"title": "Nivel 2",
 		"subtitle": "El Bosque",
-		"scene": "res://scenes/levels/level02/level02.tscn",
+		"scene": "res://escenas/levels/level02/level02.tscn",
 		"state": "locked",
 		"neon_color": Color(0.4, 1.0, 0.0),   # Verde
 	},
@@ -95,7 +95,9 @@ func load_level(index: int):
 	get_tree().change_scene_to_file(scene_path)
 
 func load_next_level():
-	load_level(current_level_index + 1)
+	var next_level = current_level_index + 1
+	print('Loading next level..' + str(next_level))
+	load_level(next_level)
 
 func load_current_level():
 	load_level(current_level_index)

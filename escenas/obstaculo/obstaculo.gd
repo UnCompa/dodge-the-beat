@@ -33,8 +33,8 @@ func _ready() -> void:
 	set_physics_process(false)
 	
 	create_sprite_obstacle()
-	create_trail_particles()
 	apply_variations()
+	create_trail_particles()
 	setup_notifier()
 
 # El spawner llama init() DESPUÉS de asignar direction, speed, etc.
@@ -113,6 +113,9 @@ func apply_variations() -> void:
 	collision_shape.rotation_degrees = sprite.rotation_degrees
 	if use_random_color:
 		sprite.modulate = Color.from_hsv(randf(), 0.8, 1.0, 1.0)
+		trail_color_base = sprite.modulate
+	else:
+		sprite.modulate = trail_color_base
 
 func create_sprite_obstacle() -> void:
 	sprite = Sprite2D.new()

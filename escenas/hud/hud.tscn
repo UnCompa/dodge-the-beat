@@ -86,16 +86,24 @@ size_flags_horizontal = 3
 
 [node name="RightHB" type="HBoxContainer" parent="CanvasLayer/MarginContainer/HBox" unique_id=1949283269]
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_vertical = 4
 alignment = 1
 
 [node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/MarginContainer/HBox/RightHB" unique_id=1110169602]
-custom_minimum_size = Vector2(200, 15)
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 4
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_nhg18")
 theme_override_styles/fill = SubResource("StyleBoxFlat_ejts4")
 rounded = true
 show_percentage = false
+
+[node name="TimeLabel" type="Label" parent="CanvasLayer/MarginContainer/HBox/RightHB" unique_id=274148353]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_e3ia6")
+text = "0:00"
+horizontal_alignment = 1
 
 [node name="SongIcon" type="TextureRect" parent="CanvasLayer/MarginContainer/HBox/RightHB" unique_id=1027338188]
 layout_mode = 2

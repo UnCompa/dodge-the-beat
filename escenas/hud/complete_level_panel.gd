@@ -27,7 +27,6 @@ func _on_continue_level():
 	# ¡IMPORTANTE! Resetear el tiempo antes de recargar
 	Engine.time_scale = 1.0 
 	LevelManager.load_next_level()
-	get_tree().reload_current_scene()
 
 func _on_menu_pressed():
 	Engine.time_scale = 1.0

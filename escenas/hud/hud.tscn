@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://dpowuciuamb3c"]
+
+[ext_resource type="Script" uid="uid://bnbjtfwo2mx37" path="res://escenas/hud/hud.gd" id="1_e6xi8"]
+[ext_resource type="Texture2D" uid="uid://b3t035d4y1qv2" path="res://sprites/heart.svg" id="2_xwi0g"]
+[ext_resource type="FontFile" uid="uid://6pdh738vgnfg" path="res://fonts/Jost-VariableFont_wght.ttf" id="3_e3ia6"]
+[ext_resource type="Texture2D" uid="uid://bmku6corfxdt" path="res://sprites/score.svg" id="4_s6bea"]
+[ext_resource type="Texture2D" uid="uid://dt6l1cgv0qmvi" path="res://sprites/music.svg" id="5_nhg18"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nhg18"]
+bg_color = Color(0.03, 0.0267, 0.0267, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ejts4"]
+bg_color = Color(0.9098039, 0.8117647, 0.8117647, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 12
+
+[node name="Hud" type="Control" unique_id=1584566176]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_right = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_e6xi8")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=18185274]
+layer = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=794173388]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 92.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HBox" type="HBoxContainer" parent="CanvasLayer/MarginContainer" unique_id=817763525]
+layout_mode = 2
+
+[node name="LeftVBox" type="VBoxContainer" parent="CanvasLayer/MarginContainer/HBox" unique_id=26728090]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="LivesHB" type="HBoxContainer" parent="CanvasLayer/MarginContainer/HBox/LeftVBox" unique_id=622060094]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/MarginContainer/HBox/LeftVBox/LivesHB" unique_id=2052434318]
+layout_mode = 2
+texture = ExtResource("2_xwi0g")
+
+[node name="LivesLabel" type="Label" parent="CanvasLayer/MarginContainer/HBox/LeftVBox/LivesHB" unique_id=1724542825]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_e3ia6")
+text = "3"
+horizontal_alignment = 1
+
+[node name="ScoreHB" type="HBoxContainer" parent="CanvasLayer/MarginContainer/HBox/LeftVBox" unique_id=1299577976]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/MarginContainer/HBox/LeftVBox/ScoreHB" unique_id=1608392150]
+layout_mode = 2
+texture = ExtResource("4_s6bea")
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer/MarginContainer/HBox/LeftVBox/ScoreHB" unique_id=1358359779]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_e3ia6")
+text = "0"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="CanvasLayer/MarginContainer/HBox" unique_id=49281505]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RightHB" type="HBoxContainer" parent="CanvasLayer/MarginContainer/HBox" unique_id=1949283269]
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/MarginContainer/HBox/RightHB" unique_id=1110169602]
+custom_minimum_size = Vector2(200, 15)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_nhg18")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ejts4")
+rounded = true
+show_percentage = false
+
+[node name="SongIcon" type="TextureRect" parent="CanvasLayer/MarginContainer/HBox/RightHB" unique_id=1027338188]
+layout_mode = 2
+texture = ExtResource("5_nhg18")
+stretch_mode = 2

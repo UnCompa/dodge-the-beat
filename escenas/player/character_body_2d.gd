@@ -21,11 +21,10 @@ extends CharacterBody2D
 
 ### NUEVO: Sistema de Vidas ###
 @export_group("Vidas")
-@export var max_lives: int = 3
 @export var invulnerability_time: float = 1.5    # Segundos de invulnerabilidad
 @export var blink_speed: float = 10.0            # Velocidad de parpadeo
 
-var current_lives: int
+#var current_lives: int
 var is_invulnerable: bool = false
 var invulnerability_timer: float = 0.0
 var blink_timer: float = 0.0
@@ -48,12 +47,11 @@ var facing_direction: Vector2 = Vector2.RIGHT
 var base_polygon: PackedVector2Array  # Forma base del polígono
 
 func _ready() -> void:
-	#current_lives = max_lives  ### NUEVO: Inicializar vidas ###
 	create_player_shape()
 	create_trail_particles()
 	add_to_group('player')
 	
-	#GameManager.lives_changed.connect(_on_lives_changed)
+	GameManager.game_over.connect(_on_game_over_global)
 
 func create_player_shape() -> void:
 	var size := 10.0
@@ -160,16 +158,16 @@ func update_invulnerability(delta: float) -> void:
 
 ### NUEVO: Función para recibir daño ###
 func take_damage() -> void:
-	if is_invulnerable or GameManager.current_lives <= 0:
+	# Ahora preguntamos directamente al GameManager
+	if is_invulnerable or is_dashing or GameManager.current_lives <= 0:
 		return
 	
 	GameManager.current_lives -= 1
-	print("Vidas restantes: ", current_lives)  # Debug
 	
-	if GameManager.current_lives <= 0:
-		game_over()
-	else:
-		start_invulnerability()
+	# Ahora el print mostrará la vida REAL del Manager
+	print("Vidas restantes (Manager): ", GameManager.current_lives)
+	
+	start_invulnerability()
 
 ### NUEVO: Iniciar invulnerabilidad ###
 func start_invulnerability() -> void:
@@ -178,11 +176,8 @@ func start_invulnerability() -> void:
 	blink_timer = 0.0
 	is_visible_override = true
 
-### NUEVO: Game Over ###
-func game_over() -> void:
-	print("GAME OVER")
-	# Aquí puedes añadir: reiniciar nivel, mostrar menú, etc.
-	# Por ahora solo desactivamos al jugador
+func _on_game_over_global() -> void:
+	print("Jugador: Deteniendo procesos por Game Over")
 	set_physics_process(false)
 	visual_poly.visible = false
 	trail_particles.emitting = false
@@ -239,10 +234,14 @@ func update_trail() -> void:
 	
 	if is_dashing:
 		trail_particles.lifetime = 0.8
-		trail_particles.self_modulate = Color(3.0, 3.0, 5.0, 1.0)
+		trail_particles.self_modulate = Color(3.0, 3.0, 5.0, 1.0) # Brillo HDR
+		visual_poly.self_modulate = Color(2.0, 2.0, 2.0, 1.0)    # Personaje brilla en blanco
 	else:
 		trail_particles.lifetime = 0.4
 		trail_particles.self_modulate = Color.WHITE
+		# Solo volvemos al color normal si no estamos parpadeando por daño
+		if not is_invulnerable:
+			visual_poly.self_modulate = Color.WHITE # O player_color si prefieres
 
 func start_dash(input_dir: Vector2) -> void:
 	is_dashing = true

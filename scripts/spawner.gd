@@ -35,6 +35,7 @@ const DIFFICULTY_PATTERNS: Array = [
 @export var min_time_between_beats: float = 0.2
 @export var freq_range_low: float = 20.0
 @export var freq_range_high: float = 150.0
+@export var sensitivity: float = 50.0
 
 var spectrum_analyzer: AudioEffectSpectrumAnalyzerInstance
 var last_beat_time: float = 0.0
@@ -51,7 +52,7 @@ func _ready() -> void:
 		push_warning("No hay cámara asignada, usando viewport como fallback.")
 
 	spectrum_analyzer = AudioServer.get_bus_effect_instance(
-		AudioServer.get_bus_index("Master"), 0
+		AudioServer.get_bus_index("Musica"), 0
 	)
 	music.play()
 
@@ -69,7 +70,7 @@ func _process(_delta: float) -> void:
 
 	var magnitude = spectrum_analyzer.get_magnitude_for_frequency_range(
 		freq_range_low, freq_range_high
-	).length() * 100
+	).length() * sensitivity
 
 	var current_time = Time.get_ticks_msec() / 1000.0
 	if magnitude > energy_threshold and (current_time - last_beat_time) > min_time_between_beats:
@@ -101,30 +102,53 @@ func _get_bounds() -> Rect2:
 
 func _spawn_wave(magnitude: float) -> void:
 	if obstacle_scene == null: return
+	
+	var label = _get_intensity_label(magnitude)
+	#print("Ritmo detectado: ", label, " | Magnitud: ", str(magnitude).pad_decimals(3))
 
 	var bounds: Rect2 = _get_bounds()
+	
+	# 1. DETERMINAR LA INTENSIDAD BASADA EN EL RITMO
+	# Mapeamos la magnitud (0.1 a 1.2) a un multiplicador de cantidad (0 a 1)
+	# Si la música es suave, el ratio es 0. Si es fuerte, es 1.
+	var intensity_ratio = remap(magnitude, energy_threshold, 5.0, 0.0, 1.0)
+	intensity_ratio = clamp(intensity_ratio, 0.0, 1.0)
+
+	# 2. SELECCIÓN DE PATRÓN SEGÚN DIFICULTAD
 	var pattern_pool: Array = DIFFICULTY_PATTERNS[clamp(difficulty_level, 0, DIFFICULTY_PATTERNS.size() - 1)]
 	var chosen_pattern: Array = pattern_pool[randi() % pattern_pool.size()]
 
-	if not random_sides:
-		chosen_pattern = [side_override]
+	# 3. CÁLCULO DINÁMICO DE CANTIDAD
+	# Cantidad base según dificultad + bono por intensidad rítmica
+	var base_count = 1 + int(difficulty_level * 0.5) 
+	var intensity_bonus = int(intensity_ratio * (max_obstacles_per_beat - base_count))
+	
+	var total_per_side = clamp(base_count + intensity_bonus, 1, max_obstacles_per_beat)
 
+	# 4. CÁLCULO DE VELOCIDAD
 	var song_length: float = music.stream.get_length() if music.stream else 180.0
 	var song_progress: float = clamp(song_time / song_length, 0.0, 1.0)
-	var speed_mult: float = lerp(1.0, max_speed_multiplier, song_progress) * pow(1.2, float(difficulty_level))
+	var speed_mult: float = lerp(1.0, max_speed_multiplier, song_progress) * pow(1.15, float(difficulty_level))
 
-	var per_side: int = int(clamp(
-		float(difficulty_level + 1) + floor(magnitude * 0.04),
-		1.0, float(max_obstacles_per_beat)
-	))
-
+	# 5. SPAWNEO
 	var should_accelerate: bool = difficulty_level >= acceleration_difficulty_threshold
 
 	for side in chosen_pattern:
-		for i in range(per_side):
+		for i in range(total_per_side):
+			# Añadimos un pequeño delay aleatorio entre proyectiles de la misma ráfaga 
+			# para que no salgan todos uno encima de otro
 			_spawn_single(side, bounds, speed_mult, should_accelerate, magnitude)
 			
-	GameManager.add_score(1)
+	if GameManager.current_lives != 0:
+		GameManager.add_score(1)
+	
+func _get_intensity_label(mag: float) -> String:
+	if mag > 5.0:   return "🔥 [EXTREMO]"      # Picos máximos
+	if mag > 3.5:   return "⚡ [ALTO]"         # Beats muy marcados
+	if mag > 2.5:   return "✨ [MEDIO-ALTO]"   # Ritmo constante
+	if mag > 1.5:   return "💎 [MEDIO]"        # El cuerpo de la canción
+	if mag > 0.8:   return "🍃 [BAJO-MEDIO]"   # Sonidos de fondo
+	return "❄️ [BAJO]"                         # Silencios o sutiles
 
 func _spawn_single(side: SpawnSide, bounds: Rect2, speed_mult: float, should_accelerate: bool, magnitude: float) -> void:
 	var obstacle = obstacle_scene.instantiate()

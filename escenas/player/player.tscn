@@ -6,7 +6,6 @@
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=286564188]
 script = ExtResource("1_txhqx")
-max_lives = 10
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CharacterBody2D" unique_id=1198842287]
 position = Vector2(3.494382, 8.736308)

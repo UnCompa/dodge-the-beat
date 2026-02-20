@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://dnemweto3bcq6"]
+
+[ext_resource type="PackedScene" uid="uid://cx3n2f5llbyy8" path="res://escenas/player/player.tscn" id="1_pdctq"]
+[ext_resource type="Script" uid="uid://7jyri4vl5d3u" path="res://escenas/levels/level01/level01.gd" id="1_rrast"]
+[ext_resource type="Script" uid="uid://d3ma2qksq6rpw" path="res://escenas/levels/level01/camera_2d.gd" id="2_snxy5"]
+[ext_resource type="PackedScene" uid="uid://dpowuciuamb3c" path="res://escenas/hud/hud.tscn" id="2_w8lef"]
+[ext_resource type="PackedScene" uid="uid://dqxg0m6u758t3" path="res://escenas/spawner/spawner.tscn" id="3_yoxmf"]
+[ext_resource type="AudioStream" uid="uid://y5cbbmrpknia" path="res://music/juniorsoundays-problems-188614.mp3" id="6_px6n3"]
+
+[node name="EscenaPrincipal" type="Node2D" unique_id=1234830979]
+script = ExtResource("1_rrast")
+
+[node name="Hud" parent="." unique_id=1584566176 node_paths=PackedStringArray("music_player") instance=ExtResource("2_w8lef")]
+music_player = NodePath("../AudioStreamPlayer2D")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1639451654]
+limit_smoothed = true
+script = ExtResource("2_snxy5")
+
+[node name="Player" parent="." unique_id=1616885226 instance=ExtResource("1_pdctq")]
+position = Vector2(-22, 26)
+
+[node name="Spawner" parent="." unique_id=679960899 node_paths=PackedStringArray("camera", "music") instance=ExtResource("3_yoxmf")]
+position = Vector2(0, -255)
+camera = NodePath("../Camera2D")
+speed_variation = 0.2
+max_speed_multiplier = 1.0
+acceleration_difficulty_threshold = 1
+music = NodePath("../AudioStreamPlayer2D")
+energy_threshold = 1.0
+min_time_between_beats = 0.1
+freq_range_low = 10.0
+freq_range_high = 50.0
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1303062566]
+stream = ExtResource("6_px6n3")
+volume_db = 1.0
+autoplay = true
+bus = &"Musica"
+playback_type = 1

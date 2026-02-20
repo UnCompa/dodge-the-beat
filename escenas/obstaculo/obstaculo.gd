@@ -61,9 +61,9 @@ func _physics_process(delta: float) -> void:
 	global_position += velocity * delta
 
 	# Brillo de pulso
-	if pulse_energy > 1.0:
-		pulse_energy = lerp(pulse_energy, 1.0, 0.10)
-		sprite.self_modulate = Color(pulse_energy, pulse_energy, pulse_energy, 1.0)
+	#if pulse_energy > 1.0:
+	#	pulse_energy = lerp(pulse_energy, 1.0, 0.10)
+	#	sprite.self_modulate = Color(pulse_energy, pulse_energy, pulse_energy, 1.0)
 
 	_update_trail_intensity()
 
@@ -72,14 +72,33 @@ func _physics_process(delta: float) -> void:
 # ─────────────────────────────────────────
 
 func _on_beat_detected(magnitude: float) -> void:
-	pulse_energy = 2.8  # brillo fuerte en el beat
+	# --- SISTEMA DE PROBABILIDAD ---
+	# Ajusta este valor: 0.5 = 50% de probabilidad, 0.3 = 30%, etc.
+	var chance_to_pulse: float = 0.4 
+	
+	if randf() > chance_to_pulse:
+		return # Si no pasa la probabilidad, ignoramos el beat y no hacemos nada
+	# -------------------------------
 
-	var bounce = clamp(magnitude * 0.1, 1.1, 1.5)
+	# Mapeamos la magnitud para que sea visible (de 0.1-1.2 a 1.0-5.0)
+	var glow_intensity = remap(magnitude, 0.1, 1.2, 1.0, 5.0)
+	glow_intensity = clamp(glow_intensity, 1.0, 6.0)
+	
 	var tween = create_tween()
-	tween.tween_property(sprite, "scale", base_scale * bounce, 0.05) \
+	
+	# Flash de iluminación HDR (Color Blanco puro por encima de 1.0 para que brille)
+	tween.tween_property(sprite, "self_modulate", Color(glow_intensity, glow_intensity, glow_intensity, 1.0), 0.05) \
 		.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
-	tween.tween_property(sprite, "scale", base_scale, 0.18) \
-		.set_trans(Tween.TRANS_SINE)
+		
+	# Regreso suave al estado normal
+	tween.tween_property(sprite, "self_modulate", Color(1.0, 1.0, 1.0, 1.0), 0.2) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+	# Rebote de escala sutil mapeado
+	var bounce_factor = remap(magnitude, 0.1, 1.2, 1.0, 1.25)
+	var scale_tween = create_tween()
+	scale_tween.tween_property(sprite, "scale", base_scale * bounce_factor, 0.05)
+	scale_tween.tween_property(sprite, "scale", base_scale, 0.15)
 
 # ─────────────────────────────────────────
 #  CONSTRUCCIÓN DEL NODO
@@ -200,6 +219,12 @@ func _update_trail_intensity() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
+		# Verificamos si el jugador tiene la variable 'is_dashing' en true
+		if "is_dashing" in body and body.is_dashing:
+			# Si está dasheando, no hacemos nada y salimos de la función
+			return 
+		
+		# Si NO está dasheando, aplicamos el impacto y destruimos el proyectil
 		body.register_collision_impact(-velocity.normalized(), velocity.length())
 		queue_free()
 

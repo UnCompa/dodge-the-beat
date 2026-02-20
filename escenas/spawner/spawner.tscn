@@ -7,5 +7,7 @@
 script = ExtResource("1_xeu0j")
 obstacle_scene = ExtResource("2_u2fdt")
 margin = 0.0
+base_speed = 300.0
 speed_variation = 100.0
-difficulty_interval = 10.0
+max_obstacles_per_beat = 2
+energy_threshold = 5.0

@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://cijdrmx8pgcat"]
+
+[ext_resource type="Script" uid="uid://m8etkihs8m2y" path="res://escenas/levels/level03/level_03.gd" id="1_5kng8"]
+[ext_resource type="Script" uid="uid://d3ma2qksq6rpw" path="res://scripts/camera_manager.gd" id="2_xwi11"]
+[ext_resource type="PackedScene" uid="uid://cx3n2f5llbyy8" path="res://escenas/player/player.tscn" id="3_djx25"]
+[ext_resource type="PackedScene" uid="uid://dqxg0m6u758t3" path="res://escenas/spawner/spawner.tscn" id="4_wy6ut"]
+[ext_resource type="AudioStream" uid="uid://d4k7a4jhna1ko" path="res://music/sapan4-edm-gaming-music-335408.mp3" id="5_3mi5v"]
+[ext_resource type="PackedScene" uid="uid://bbopwrkjcu251" path="res://escenas/hud/pause_menu.tscn" id="6_yias2"]
+[ext_resource type="PackedScene" uid="uid://dpowuciuamb3c" path="res://escenas/hud/hud.tscn" id="7_3qqam"]
+[ext_resource type="PackedScene" uid="uid://c3p1d2fibx2dg" path="res://escenas/hud/game_over_panel.tscn" id="8_r7djb"]
+[ext_resource type="PackedScene" uid="uid://df01le8v3ygpi" path="res://escenas/hud/complete_level_panel.tscn" id="9_nvmf5"]
+
+[node name="Level03" type="Node2D" unique_id=1234830979]
+script = ExtResource("1_5kng8")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1639451654]
+limit_smoothed = true
+script = ExtResource("2_xwi11")
+
+[node name="Player" parent="." unique_id=1616885226 instance=ExtResource("3_djx25")]
+position = Vector2(-22, 26)
+
+[node name="Spawner" parent="." unique_id=679960899 node_paths=PackedStringArray("camera", "music") instance=ExtResource("4_wy6ut")]
+position = Vector2(0, -255)
+camera = NodePath("../Camera2D")
+side_override = 1
+base_speed = 325.0
+speed_variation = 0.2
+max_speed_multiplier = 1.05
+max_obstacles_per_beat = 3
+music = NodePath("../AudioStreamPlayer2D")
+min_time_between_beats = 0.5
+freq_range_high = 280.0
+sensitivity = 70.0
+color_mode = 1
+spawner_color = Color(0.74201334, 0.76, 0.22040002, 1)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1303062566]
+stream = ExtResource("5_3mi5v")
+volume_db = 1.0
+autoplay = true
+bus = &"Musica"
+playback_type = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=720536584]
+
+[node name="Hud" parent="CanvasLayer" unique_id=1584566176 node_paths=PackedStringArray("music_player") instance=ExtResource("7_3qqam")]
+music_player = NodePath("../../AudioStreamPlayer2D")
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=424721200]
+layer = 2
+
+[node name="GameOverPanel" parent="CanvasLayer2" unique_id=317239760 instance=ExtResource("8_r7djb")]
+
+[node name="CanvasLayer3" type="CanvasLayer" parent="." unique_id=30352793]
+layer = 3
+
+[node name="CompleteLevelPanel" parent="CanvasLayer3" unique_id=2095990451 instance=ExtResource("9_nvmf5")]
+
+[node name="CanvasLayer4" type="CanvasLayer" parent="." unique_id=683167360]
+process_mode = 3
+layer = 10
+
+[node name="PauseMenu" parent="CanvasLayer4" unique_id=622304327 instance=ExtResource("6_yias2")]
+
+[connection signal="finished" from="AudioStreamPlayer2D" to="Spawner" method="_on_audio_stream_player_2d_finished"]

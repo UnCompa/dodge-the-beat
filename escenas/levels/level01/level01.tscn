@@ -42,7 +42,11 @@ playback_type = 1
 [node name="Hud" parent="CanvasLayer" unique_id=1584566176 node_paths=PackedStringArray("music_player") instance=ExtResource("2_w8lef")]
 music_player = NodePath("../../AudioStreamPlayer2D")
 
-[node name="PauseMenu" parent="CanvasLayer" unique_id=622304327 instance=ExtResource("6_ugdro")]
+[node name="CanvasLayer4" type="CanvasLayer" parent="." unique_id=2129730518]
+process_mode = 3
+layer = 10
+
+[node name="PauseMenu" parent="CanvasLayer4" unique_id=622304327 instance=ExtResource("6_ugdro")]
 
 [node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=424721200]
 layer = 2

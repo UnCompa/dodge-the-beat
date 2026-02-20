@@ -26,11 +26,10 @@ camera = NodePath("../Camera2D")
 side_override = 2
 base_speed = 250.0
 speed_variation = 10.0
-max_speed_multiplier = 1.25
+max_speed_multiplier = 1.15
 difficulty_interval = 30.0
 max_obstacles_per_beat = 1
 music = NodePath("../AudioStreamPlayer2D")
-energy_threshold = 3.0
 min_time_between_beats = 0.5
 freq_range_high = 300.0
 sensitivity = 100.0
@@ -46,8 +45,6 @@ playback_type = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=720536584]
 
-[node name="PauseMenu" parent="CanvasLayer" unique_id=622304327 instance=ExtResource("6_fw471")]
-
 [node name="Hud" parent="CanvasLayer" unique_id=1584566176 node_paths=PackedStringArray("music_player") instance=ExtResource("5_mmma5")]
 music_player = NodePath("../../AudioStreamPlayer2D")
 
@@ -60,5 +57,11 @@ layer = 2
 layer = 3
 
 [node name="CompleteLevelPanel" parent="CanvasLayer3" unique_id=2095990451 instance=ExtResource("7_05vnx")]
+
+[node name="CanvasLayer4" type="CanvasLayer" parent="." unique_id=1253464484]
+process_mode = 3
+layer = 10
+
+[node name="PauseMenu" parent="CanvasLayer4" unique_id=622304327 instance=ExtResource("6_fw471")]
 
 [connection signal="finished" from="AudioStreamPlayer2D" to="Spawner" method="_on_audio_stream_player_2d_finished"]

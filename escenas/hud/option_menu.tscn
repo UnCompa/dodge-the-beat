@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://cittiyvrd840v"]
+
+[node name="OptionMenu" type="Control" unique_id=291212730]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=99742710]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OptionPanel" type="VBoxContainer" parent="CenterContainer" unique_id=821413501]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/OptionPanel" unique_id=2017857599]
+layout_direction = 4
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Volumen Música" type="Label" parent="CenterContainer/OptionPanel/HBoxContainer" unique_id=293384165]
+layout_mode = 2
+text = "Volumen Musica"
+
+[node name="MusicSlider" type="HSlider" parent="CenterContainer/OptionPanel/HBoxContainer" unique_id=296717321]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+step = 0.1
+value = 1.0
+exp_edit = true
+rounded = true
+ticks_on_borders = true
+ticks_position = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/OptionPanel" unique_id=543384144]
+layout_mode = 2
+
+[node name="Volumen Música" type="Label" parent="CenterContainer/OptionPanel/HBoxContainer2" unique_id=997276439]
+layout_mode = 2
+text = "Modo de Pantalla"
+
+[node name="FullscreenToggle" type="CheckButton" parent="CenterContainer/OptionPanel/HBoxContainer2" unique_id=159562228]
+layout_mode = 2
+
+[node name="Exit" type="Button" parent="CenterContainer/OptionPanel" unique_id=92702048]
+layout_mode = 2
+text = "Volver"

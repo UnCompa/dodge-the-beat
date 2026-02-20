@@ -13,10 +13,38 @@ var levels: Array[Dictionary] = [
 	},
 	{
 		"title": "Nivel 2",
-		"subtitle": "El Bosque",
+		"subtitle": "Marea",
 		"scene": "res://escenas/levels/level02/level02.tscn",
 		"state": "locked",
+		"neon_color": Color(0.0, 0.683, 1.0, 1.0),   # Verde
+	},
+	{
+		"title": "Nivel 3",
+		"subtitle": "Panic",
+		"scene": "res://escenas/levels/level03/level03.tscn",
+		"state": "locked",
 		"neon_color": Color(0.4, 1.0, 0.0),   # Verde
+	},
+	{
+		"title": "Nivel 4",
+		"subtitle": "Party",
+		"scene": "res://escenas/levels/level04/level04.tscn",
+		"state": "locked",
+		"neon_color": Color(0.583, 0.0, 1.0, 1.0),   # Verde
+	},
+	{
+		"title": "Nivel 5",
+		"subtitle": "Emergency",
+		"scene": "res://escenas/levels/level05/level05.tscn",
+		"state": "locked",
+		"neon_color": Color(1.0, 0.717, 0.0, 1.0),   # Verde
+	},
+	{
+		"title": "Nivel 0",
+		"subtitle": "Caos",
+		"scene": "res://escenas/levels/level06/level06.tscn",
+		"state": "available",
+		"neon_color": Color(1.0, 0.0, 0.0, 1.0),   # Verde
 	},
 ]
 

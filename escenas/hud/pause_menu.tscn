@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bbopwrkjcu251"]
 
 [ext_resource type="Script" uid="uid://dty6odveetkny" path="res://escenas/hud/pause_menu.gd" id="1_5y6wo"]
+[ext_resource type="PackedScene" uid="uid://cittiyvrd840v" path="res://escenas/hud/option_menu.tscn" id="2_c25hh"]
 
 [node name="PauseMenu" type="Control" unique_id=622304327]
 process_mode = 3
@@ -45,6 +46,17 @@ text = "CONTINUAR"
 layout_mode = 2
 text = "REINTENTAR"
 
+[node name="OptionButton" type="Button" parent="CenterContainer/VBox" unique_id=420603281]
+layout_mode = 2
+text = "OPCIONES"
+
 [node name="QuitButton" type="Button" parent="CenterContainer/VBox" unique_id=1505937861]
 layout_mode = 2
 text = "SALIR"
+
+[node name="OptionMenu" parent="." unique_id=291212730 instance=ExtResource("2_c25hh")]
+layout_mode = 1
+
+[node name="RetryButton" type="Button" parent="OptionMenu" unique_id=1257978768]
+layout_mode = 0
+text = "REINTENTAR"

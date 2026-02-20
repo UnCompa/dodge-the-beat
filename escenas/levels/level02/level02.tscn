@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://dntdsjodbp4oc"]
+
+[ext_resource type="Script" uid="uid://d3ma2qksq6rpw" path="res://scripts/camera_manager.gd" id="1_f6uii"]
+[ext_resource type="PackedScene" uid="uid://cx3n2f5llbyy8" path="res://escenas/player/player.tscn" id="2_7nbg6"]
+[ext_resource type="PackedScene" uid="uid://dqxg0m6u758t3" path="res://escenas/spawner/spawner.tscn" id="3_fw471"]
+[ext_resource type="AudioStream" uid="uid://bq6qn0mvcm7v4" path="res://music/vibehorn-relax-lofi-beat-461489.mp3" id="4_f6uii"]
+[ext_resource type="PackedScene" uid="uid://dpowuciuamb3c" path="res://escenas/hud/hud.tscn" id="5_mmma5"]
+[ext_resource type="PackedScene" uid="uid://c3p1d2fibx2dg" path="res://escenas/hud/game_over_panel.tscn" id="6_sgg8l"]
+[ext_resource type="PackedScene" uid="uid://df01le8v3ygpi" path="res://escenas/hud/complete_level_panel.tscn" id="7_05vnx"]
+
+[node name="EscenaPrincipal" type="Node2D" unique_id=1234830979]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1639451654]
+limit_smoothed = true
+script = ExtResource("1_f6uii")
+
+[node name="Player" parent="." unique_id=1616885226 instance=ExtResource("2_7nbg6")]
+position = Vector2(-22, 26)
+
+[node name="Spawner" parent="." unique_id=679960899 node_paths=PackedStringArray("camera", "music") instance=ExtResource("3_fw471")]
+position = Vector2(0, -255)
+camera = NodePath("../Camera2D")
+random_sides = false
+side_override = 2
+base_speed = 100.0
+speed_variation = 0.2
+max_speed_multiplier = 1.0
+acceleration_difficulty_threshold = 1
+music = NodePath("../AudioStreamPlayer2D")
+energy_threshold = 0.1
+min_time_between_beats = 0.1
+freq_range_low = 10.0
+freq_range_high = 50.0
+sensitivity = 100.0
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1303062566]
+stream = ExtResource("4_f6uii")
+volume_db = 1.0
+autoplay = true
+bus = &"Musica"
+playback_type = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=720536584]
+
+[node name="Hud" parent="CanvasLayer" unique_id=1584566176 node_paths=PackedStringArray("music_player") instance=ExtResource("5_mmma5")]
+music_player = NodePath("../../AudioStreamPlayer2D")
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=424721200]
+layer = 2
+
+[node name="GameOverPanel" parent="CanvasLayer2" unique_id=317239760 instance=ExtResource("6_sgg8l")]
+
+[node name="CanvasLayer3" type="CanvasLayer" parent="." unique_id=30352793]
+layer = 3
+
+[node name="CompleteLevelPanel" parent="CanvasLayer3" unique_id=2095990451 instance=ExtResource("7_05vnx")]
+
+[connection signal="finished" from="AudioStreamPlayer2D" to="Spawner" method="_on_audio_stream_player_2d_finished"]

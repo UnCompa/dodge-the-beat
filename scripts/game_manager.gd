@@ -5,6 +5,7 @@ signal lives_changed(new_lives)
 signal score_changed(new_score)
 signal game_over
 signal game_started
+signal level_completed
 
 @export var max_lives: int = 1
 var current_lives: int = 1:
@@ -103,3 +104,27 @@ func _show_game_over_ui():
 	var go_ui = get_tree().current_scene.find_child("GameOverPanel", true, false)
 	if go_ui:
 		go_ui.show_screen()
+		
+func complete_level() -> void:
+	print("¡NIVEL COMPLETADO!")
+	level_completed.emit()
+	LevelManager.complete_level(LevelManager.current_level_index)
+	
+	# 1. Detener el tiempo ligeramente para el efecto visual (opcional)
+	# Engine.time_scale = 0.5 
+	
+	# 2. Hacer al jugador invulnerable para que nada lo mate en la pantalla de victoria
+	var player = get_tree().get_first_node_in_group("player")
+	if player:
+		player.is_invulnerable = true 
+	
+	# 3. Mostrar el panel de victoria
+	_show_win_ui()
+
+func _show_win_ui():
+	var win_ui = get_tree().current_scene.find_child("CompleteLevelPanel", true, false)
+	if win_ui:
+		# Si tu panel tiene una función para mostrarse:
+		win_ui.show_win_screen() 
+	else:
+		push_warning("No se encontró el panel de Nivel Completado")

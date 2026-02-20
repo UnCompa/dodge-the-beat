@@ -54,7 +54,23 @@ func _ready() -> void:
 	spectrum_analyzer = AudioServer.get_bus_effect_instance(
 		AudioServer.get_bus_index("Musica"), 0
 	)
+	await get_tree().process_frame 
+	
 	music.play()
+	print("Iniciando canción: ", music.stream.resource_path)
+	
+	music.finished.connect(_on_music_finished)
+	
+	
+func _on_music_finished():
+	# SEGURIDAD: Solo completar si el tiempo de la canción es mayor a 0
+	# y si realmente ha pasado un tiempo mínimo desde que empezó el nivel.	
+	if music.stream:
+		if GameManager.current_lives > 0:
+			GameManager.complete_level()
+	else:
+		# Si se dispara al segundo 0, es un error de carga o stream vacío
+		print("Música finalizada prematuramente. ¿El archivo de audio es válido?")
 
 func _process(_delta: float) -> void:
 	if not music.playing: return
@@ -104,7 +120,7 @@ func _spawn_wave(magnitude: float) -> void:
 	if obstacle_scene == null: return
 	
 	var label = _get_intensity_label(magnitude)
-	#print("Ritmo detectado: ", label, " | Magnitud: ", str(magnitude).pad_decimals(3))
+	print("Ritmo detectado: ", label, " | Magnitud: ", str(magnitude).pad_decimals(3))
 
 	var bounds: Rect2 = _get_bounds()
 	
@@ -192,3 +208,7 @@ func _spawn_single(side: SpawnSide, bounds: Rect2, speed_mult: float, should_acc
 	else:
 		push_error("ERROR: El proyectil no tiene el script en su nodo raíz. ¡Revisa tu escena 'obstacle_scene'!")
 		obstacle.queue_free()
+
+
+func _on_audio_stream_player_2d_finished() -> void:
+	pass # Replace with function body.

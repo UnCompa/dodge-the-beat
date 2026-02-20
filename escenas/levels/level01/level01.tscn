@@ -1,19 +1,18 @@
 [gd_scene format=3 uid="uid://dnemweto3bcq6"]
 
 [ext_resource type="PackedScene" uid="uid://cx3n2f5llbyy8" path="res://escenas/player/player.tscn" id="1_pdctq"]
-[ext_resource type="Script" uid="uid://7jyri4vl5d3u" path="res://escenas/levels/level01/level01.gd" id="1_rrast"]
-[ext_resource type="Script" uid="uid://d3ma2qksq6rpw" path="res://escenas/levels/level01/camera_2d.gd" id="2_snxy5"]
+[ext_resource type="Script" uid="uid://d3ma2qksq6rpw" path="res://scripts/camera_manager.gd" id="1_ydodv"]
 [ext_resource type="PackedScene" uid="uid://dpowuciuamb3c" path="res://escenas/hud/hud.tscn" id="2_w8lef"]
 [ext_resource type="PackedScene" uid="uid://c3p1d2fibx2dg" path="res://escenas/hud/game_over_panel.tscn" id="2_ydodv"]
 [ext_resource type="PackedScene" uid="uid://dqxg0m6u758t3" path="res://escenas/spawner/spawner.tscn" id="3_yoxmf"]
-[ext_resource type="AudioStream" uid="uid://y5cbbmrpknia" path="res://music/juniorsoundays-problems-188614.mp3" id="6_px6n3"]
+[ext_resource type="AudioStream" uid="uid://cu2vt8pw2f1fe" path="res://music/moodmode-prime-glitched-logo-165413.mp3" id="5_ugdro"]
+[ext_resource type="PackedScene" uid="uid://df01le8v3ygpi" path="res://escenas/hud/complete_level_panel.tscn" id="8_ugdro"]
 
 [node name="EscenaPrincipal" type="Node2D" unique_id=1234830979]
-script = ExtResource("1_rrast")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1639451654]
 limit_smoothed = true
-script = ExtResource("2_snxy5")
+script = ExtResource("1_ydodv")
 
 [node name="Player" parent="." unique_id=1616885226 instance=ExtResource("1_pdctq")]
 position = Vector2(-22, 26)
@@ -31,7 +30,7 @@ freq_range_low = 10.0
 freq_range_high = 50.0
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1303062566]
-stream = ExtResource("6_px6n3")
+stream = ExtResource("5_ugdro")
 volume_db = 1.0
 autoplay = true
 bus = &"Musica"
@@ -46,3 +45,10 @@ music_player = NodePath("../../AudioStreamPlayer2D")
 layer = 2
 
 [node name="GameOverPanel" parent="CanvasLayer2" unique_id=317239760 instance=ExtResource("2_ydodv")]
+
+[node name="CanvasLayer3" type="CanvasLayer" parent="." unique_id=30352793]
+layer = 3
+
+[node name="CompleteLevelPanel" parent="CanvasLayer3" unique_id=2095990451 instance=ExtResource("8_ugdro")]
+
+[connection signal="finished" from="AudioStreamPlayer2D" to="Spawner" method="_on_audio_stream_player_2d_finished"]
